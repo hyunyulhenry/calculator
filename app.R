@@ -4,10 +4,12 @@ library(shiny)
 library(shinythemes)
 library(shinycssloaders)
 library(shinyBS)
-library(tidyverse)
+library(shinyWidgets)
+library(shinyscreenshot)
+library(dplyr)
+library(tidyr)
 library(DT)
 library(magrittr)
-library(shinyWidgets)
 library(lubridate)
 library(plotly)
 
@@ -82,10 +84,11 @@ ui <- navbarPage(
                actionButton("showTable", "큰돈 입/출금 계획 수기로 입력하기",
                             icon = icon("table"), width = '100%'),
                hr(),
-               actionButton("cal", "계산하기!",
-                            icon = icon("calculator"), width = '100%',
-                            class = "btn-info")
                
+               fluidRow(
+                 column(6,style=list("padding-right: 5px;"), uiOutput('cal')),
+                 column(6,style=list("padding-left: 5px;"), uiOutput('screen'))
+               )
              )
            ),
            
@@ -377,6 +380,10 @@ server <- function(input, output, session) {
                   backgroundColor = styleEqual(c('정상수령', 0), c('orange', 'white'))) %>%
       formatStyle(columns = colnames(.$x$data), `font-size` = '12px')
     
+  })
+  
+  observeEvent(input$screen, {
+    screenshot()
   })
   
 }

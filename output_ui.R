@@ -184,4 +184,19 @@ output$inc = renderUI({
                    width = '100%')
 })
 
+output$cal = renderUI({
+  
+  actionButton("cal", "계산하기!",
+               icon = icon("calculator"), width = '100%',
+               class = "btn-info")
+  
+})
+
+output$screen = renderUI({
+  
+  actionButton("screen", "페이지 저장하기",
+               icon = icon("camera-retro"), width = '100%',
+               class = "btn-success")
+  
+})
 
