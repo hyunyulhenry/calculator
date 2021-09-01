@@ -66,7 +66,7 @@ output$wealth= renderUI({
 output$invest= renderUI({
   
   autonumericInput(inputId = "invest",
-                   label = "목표 월간 투자금액 (원)",
+                   label = "예상 월간 투자금액 (원)",
                    value = 400000, 
                    min = 0,
                    currencySymbolPlacement = "p",
@@ -199,4 +199,3 @@ output$screen = renderUI({
                class = "btn-success")
   
 })
-

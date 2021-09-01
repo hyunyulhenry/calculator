@@ -12,6 +12,7 @@ library(DT)
 library(magrittr)
 library(lubridate)
 library(plotly)
+library(rmarkdown)
 
 source("modal_dialog.R", encoding="utf-8")
 
@@ -46,7 +47,7 @@ ui <- navbarPage(
   title = '연금 계산기',
   theme = shinytheme("united"),
   
-  tabPanel(title = '계산하기',
+  tabPanel(title = '은퇴를 위한 목표 계산하기',
            
            sidebarPanel(
              width = 3,
@@ -89,6 +90,7 @@ ui <- navbarPage(
                  column(6,style=list("padding-right: 5px;"), uiOutput('cal')),
                  column(6,style=list("padding-left: 5px;"), uiOutput('screen'))
                )
+               
              )
            ),
            
@@ -132,15 +134,15 @@ ui <- navbarPage(
              ),
              
              tabsetPanel(type = "tabs",
-                         tabPanel('자금계획 계산하기',
+                         tabPanel('자금계획 그래프',
                                   br(),
                                   textOutput('msg'),
                                   plotlyOutput('graph', height = '700px') %>% withSpinner(color = '#ff6211')
                          ),
-                         tabPanel('테이블',
+                         tabPanel('자금계획 테이블',
                                   br(),
                                   dataTableOutput('tbl')),
-                         tabPanel('입력값 확인하기',
+                         tabPanel('입력값들은 무엇인가요?',
                                   br(),
                                   includeMarkdown('input.Rmd')
                                   )
@@ -148,9 +150,15 @@ ui <- navbarPage(
            )
   ),
   
-  tabPanel(title = '국민연금 수령액 확인하기',
+  tabPanel(title = '국민연금 수령액은 어떻게 확인하나요?',
            mainPanel(
              includeMarkdown('pension.Rmd')
+           )
+  ),
+  
+  tabPanel(title = '연금은 불리오!',
+           mainPanel(
+             includeMarkdown('boolio.Rmd')
            )
   )
 )
@@ -385,6 +393,32 @@ server <- function(input, output, session) {
   observeEvent(input$screen, {
     screenshot()
   })
+  
+  output$downloadreport <- downloadHandler(
+    # For PDF output, change this to "report.pdf"
+    filename = "report.pdf",
+    content = function(file) {
+      # Copy the report file to a temporary directory before processing it, in
+      # case we don't have write permissions to the current working dir (which
+      # can happen when deployed).
+      tempReport <- file.path(tempdir(), "report.Rmd")
+      file.copy("report.Rmd", tempReport, overwrite = TRUE)
+      library(rmarkdown)
+      # Set up parameters to pass to Rmd document
+      params <- list(input$tp)
+      # Knit the document, passing in the `params` list, and eval it in a
+      # child of the global environment (this isolates the code in the document
+      # from the code in this app).
+      rmarkdown::render(tempReport, pdf_document(),
+                        #output_options=self_contained,
+                        #params = params,
+                        envir = new.env(parent = globalenv())
+      )
+      
+    }
+  )
+  
+  
   
 }
 
