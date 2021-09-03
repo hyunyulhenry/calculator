@@ -191,6 +191,10 @@ ui <- navbarPage(
                          tabPanel('입력값들은 무엇인가요?',
                                   br(),
                                   includeMarkdown('input.Rmd')
+                                  ),
+                         tabPanel('사용설명서 및 건의사항',
+                                  br(),
+                                  htmlOutput('help')
                                   )
              )
            )
@@ -200,11 +204,8 @@ ui <- navbarPage(
            mainPanel(
              includeMarkdown('pension.Rmd')
            )
-  ),
-  
-  tabPanel(title = "사용설명서 및 건의사항은 여기로",
-           includeMarkdown('lecture.Rmd')
   )
+  
   
 )
 
@@ -434,6 +435,15 @@ server <- function(input, output, session) {
   
   observeEvent(input$screen, {
     screenshot()
+  })
+  
+  output$help <- renderUI({
+    tags$iframe(
+      src="https://blog.naver.com/leebisu/222493795432",
+      width = "100%",
+      style="height: 80vh;",
+      scrolling = 'no'
+    )
   })
   
   
