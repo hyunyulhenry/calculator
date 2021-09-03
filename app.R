@@ -133,15 +133,43 @@ ui <- navbarPage(
                      dataTableOutput('nps_early')
              ),
              
+             tags$div(class="f_fixed",
+                      a(href="http://pf.kakao.com/_Dxfgxad/chat",
+                        img(src = 'kakao.png',
+                            style = 'position:fixed; bottom:45px; left:50%; margin-left:640px;')
+                      )
+             ),
+             
              tabsetPanel(type = "tabs",
-                         tabPanel('자금계획 그래프',
-                                  br(),
-                                  textOutput('msg'),
-                                  plotlyOutput('graph', height = '700px') %>% withSpinner(color = '#ff6211')
+                         tabPanel('자금계획 그래프', 
+                                  
+                                  conditionalPanel(
+                                    condition  = 'input.cal == "0"',
+                                    includeMarkdown('welcome.Rmd')
+                                  ),
+                                  
+                                  conditionalPanel(
+                                    condition  = 'input.cal != "0"',
+                                    br(),
+                                    textOutput('msg'),
+                                    plotlyOutput('graph', height = '700px') %>% withSpinner(color = '#ff6211')
+                                  )
+                                    
                          ),
                          tabPanel('자금계획 테이블',
-                                  br(),
-                                  dataTableOutput('tbl')),
+                                  
+                                  conditionalPanel(
+                                    condition  = 'input.cal == "0"',
+                                    includeMarkdown('welcome.Rmd')
+                                  ),
+                                  
+                                  conditionalPanel(
+                                    condition  = 'input.cal != "0"',
+                                    br(),
+                                    dataTableOutput('tbl'))
+                                  ),
+                                  
+                                  
                          tabPanel('입력값들은 무엇인가요?',
                                   br(),
                                   includeMarkdown('input.Rmd')
@@ -156,15 +184,11 @@ ui <- navbarPage(
            )
   ),
   
-  tabPanel(title = '연금은 불리오!',
-           mainPanel(
-             includeMarkdown('boolio.Rmd')
-           )
+  tabPanel(title = "사용설명서 및 건의사항은 여기로",
+           includeMarkdown('lecture.Rmd')
   )
+  
 )
-
-
-
 
 server <- function(input, output, session) {
   

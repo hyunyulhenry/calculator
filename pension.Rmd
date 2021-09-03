@@ -1,5 +1,7 @@
 Ⅰ. [통합연금포털] 사이트에 접속한 후, 로그인을 합니다.그 후 [내 연금조회. 재무설계]에서 [내 연금 조회]를 선택합니다.
 
+<a href="https://100lifeplan.fss.or.kr/main/main.do" target="_blank">통합연금포털 방문하기</a> 
+
 ![](nps_1.png)
 
 <br>
