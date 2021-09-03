@@ -13,6 +13,7 @@ library(magrittr)
 library(lubridate)
 library(plotly)
 library(rmarkdown)
+library(metathis)
 
 source("modal_dialog.R", encoding="utf-8")
 
@@ -47,7 +48,24 @@ ui <- navbarPage(
   title = '연금 계산기',
   theme = shinytheme("united"),
   
-  tabPanel(title = '은퇴를 위한 목표 계산하기',
+  tabPanel(
+    
+    # tags$head(
+    #   tags$meta(name="title", content="연금 계산기"),
+    #   tags$meta(name="description", content="나의 은퇴 설계를 위한 연금 계산기 입니다."),
+    #   tags$meta(name="image", content="boolio.png"),
+    #   
+    # ),
+    
+    meta() %>%
+      meta_social(
+        title = "연금 계산기",
+        description = "여러분의 은퇴설계를 위한 불리오의 연금 계산기 입니다.",
+        url = "https://doomoolmori.shinyapps.io/calculator",
+        image = "https://github.com/hyunyulhenry/calculator/blob/master/meta_og.jpg?raw=true"
+      ),
+    
+    title = '은퇴를 위한 목표 계산하기',
            
            sidebarPanel(
              width = 3,
