@@ -14,6 +14,7 @@ library(lubridate)
 library(plotly)
 library(rmarkdown)
 library(metathis)
+library(knitr)
 
 source("modal_dialog.R", encoding="utf-8")
 
@@ -186,12 +187,7 @@ ui <- navbarPage(
                                     br(),
                                     dataTableOutput('tbl'))
                                   ),
-                                  
-                                  
-                         tabPanel('입력값들은 무엇인가요?',
-                                  br(),
-                                  includeMarkdown('input.Rmd')
-                                  ),
+                        
                          tabPanel('사용설명서 및 건의사항',
                                   br(),
                                   htmlOutput('help')
@@ -202,12 +198,17 @@ ui <- navbarPage(
   
   tabPanel(title = '국민연금 수령액은 어떻게 확인하나요?',
            mainPanel(
-             includeMarkdown('pension.Rmd')
+           fluidRow(
+             column(3, ''),
+             column(9,
+                    tabsetPanel(type = "tabs", 
+                                tabPanel('Ⅰ. 통합연금포털 접속', includeMarkdown('www/nps_1.Rmd')),
+                                tabPanel('Ⅱ. 예상연금수령액 확인', includeMarkdown('www/nps_2.Rmd'))
+                    ))
+             )
+           )
            )
   )
-  
-  
-)
 
 server <- function(input, output, session) {
   
@@ -444,6 +445,11 @@ server <- function(input, output, session) {
       style="height: 80vh;",
       scrolling = 'no'
     )
+  })
+  
+  output$markdown <- renderUI({
+   
+    HTML(markdown::markdownToHTML(knit('pension.rmd', quiet = TRUE), fragment.only=TRUE))
   })
   
   
